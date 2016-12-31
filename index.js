@@ -114,6 +114,27 @@ router.get("/",function(req,res){
               });
           })
 
+          router.delete("/users/:id",function(req,res){
+            var response = {};
+            // find the data
+            mongoOp.findById(req.params.id,function(err,data){
+                if(err) {
+                    response = {"error" : true,"message" : "Error fetching data"};
+                } else {
+                    // data exists, remove it.
+                    mongoOp.remove({_id : req.params.id},function(err){
+                        if(err) {
+                            response = {"error" : true,"message" : "Error deleting data"};
+                        } else {
+                            response = {"error" : true,"message" : "Data associated with "+req.params.id+"is deleted"};
+                        }
+                        res.json(response);
+                    });
+                }
+            });
+          })
+
+
 app.use('/',router);
 
 app.listen(3000);
